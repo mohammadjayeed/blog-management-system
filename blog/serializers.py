@@ -16,3 +16,13 @@ class BlogRetrieveSerializer(ModelSerializer):
 
     def get_author_name(self, obj):
         return obj.author.username
+    
+
+class BlogSerializer(ModelSerializer):
+    author_name = serializers.SerializerMethodField()
+    class Meta:
+        model = Blog
+        fields = ['id', 'title', 'content', 'slug', 'author_name']
+
+    def get_author_name(self, obj):
+        return obj.author.username
