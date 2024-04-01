@@ -2,24 +2,19 @@ from django.shortcuts import render
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import action
 from rest_framework import status
 from rest_framework import permissions
 from rest_framework.permissions import IsAuthenticated
 from .models import Blog
 from .serializers import BlogCreateUpdateSerializer, BlogRetrieveSerializer, BlogSerializer
+from .permissions import (blog_create_view_permissions_by_action, blog_retrieveupdatedelete_permissions_by_action)
 
 class BlogCreateViewSet(ViewSet):
 
     def get_permissions(self):
-        
-        if self.action == 'list':
-            permission_classes = [permissions.AllowAny]
-        elif self.action == 'create':
-            permission_classes = [IsAuthenticated]
-        else:
-            permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-            
-        return [permission() for permission in permission_classes]
+
+        return [permission() for permission in blog_create_view_permissions_by_action(self.action)]
 
     @swagger_auto_schema(request_body=BlogCreateUpdateSerializer)
     def create(self, request):
@@ -32,7 +27,7 @@ class BlogCreateViewSet(ViewSet):
         
         
         serializer.save(author=request.user)
-        return Response({"status": "success","message": "blog post created."}, status.HTTP_201_CREATED)
+        return Response({"id": serializer.instance.id, "status": "success","message": "blog post created."}, status.HTTP_201_CREATED)
     
 
     def list(self, request):
@@ -40,13 +35,20 @@ class BlogCreateViewSet(ViewSet):
         
         queryset = Blog.objects.all()
         serializer = BlogSerializer(queryset, many=True)
-        
         return Response({"status": "success","results": serializer.data})
+    
+    @swagger_auto_schema(tags=['my_blog_posts'])
+    @action(detail=False, methods=['GET'], permission_classes=[IsAuthenticated])
+    def me(self,request):
+        queryset = Blog.objects.filter(author= request.user.id)
+        serializer = BlogSerializer(queryset, many=True)
+        return Response(serializer.data)
    
         
 class BlogRetrieveUpdateDeleteViewSet(ViewSet):
 
-    permission_classes = [IsAuthenticated]
+    def get_permissions(self):
+        return [permission() for permission in blog_retrieveupdatedelete_permissions_by_action(self.action)]
 
     def retrieve(self, request, pk):
         
@@ -55,8 +57,8 @@ class BlogRetrieveUpdateDeleteViewSet(ViewSet):
         except Blog.DoesNotExist:
             return Response({"status": "success","message": "No matching Blog post."}, status.HTTP_404_NOT_FOUND)
         
-        if queryset.author != request.user:
-            return Response({"status": "error", "message": "You do not have permission to see details of this post."}, status=status.HTTP_403_FORBIDDEN)
+        # if queryset.author != request.user:
+        #     return Response({"status": "error", "message": "You do not have permission to see details of this post."}, status=status.HTTP_403_FORBIDDEN)
 
         serializer = BlogRetrieveSerializer(queryset)
         

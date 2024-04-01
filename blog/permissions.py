@@ -1,12 +1,17 @@
 from rest_framework import permissions
 
-class IsAuthor(permissions.BasePermission):
-    """
-    Permission to only allow authenticated authors of the blog to edit it.
-    """
+
+def blog_create_view_permissions_by_action(action):
+    if action == 'list':
+        return [permissions.AllowAny]
+    elif action == 'create':
+        return [permissions.IsAuthenticated]
+    else:
+        return [permissions.IsAuthenticated]
     
 
-    def has_object_permission(self, request, view, obj):
-        
-        
-        return obj.author == request.user
+def blog_retrieveupdatedelete_permissions_by_action(action):
+    if action == 'retrieve':
+        return [permissions.AllowAny]
+    else:
+        return [permissions.IsAuthenticated]
