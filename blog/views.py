@@ -42,7 +42,7 @@ class BlogCreateViewSet(ViewSet):
     def me(self,request):
         queryset = Blog.objects.filter(author= request.user.id)
         serializer = BlogSerializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response({"status": "success","results": serializer.data})
    
         
 class BlogRetrieveUpdateDeleteViewSet(ViewSet):

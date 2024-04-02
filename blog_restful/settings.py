@@ -1,6 +1,5 @@
 from datetime import timedelta
 from pathlib import Path
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -74,13 +73,24 @@ WSGI_APPLICATION = 'blog_restful.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'mydatabase',
+#         'USER': 'user',
+#         'PASSWORD': 'password',
+#         'HOST': 'database',
+#         'PORT': '3306'
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mydatabase',
-        'USER': 'user',
-        'PASSWORD': 'password',
-        'HOST': 'database',
+        'NAME': 'blog',
+        'USER': 'root',
+        'PASSWORD': 'lassa',
+        'HOST': 'localhost',
         'PORT': '3306'
     }
 }
