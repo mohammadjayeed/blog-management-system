@@ -62,35 +62,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'blog_restful.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'mydatabase',
-#         'USER': 'user',
-#         'PASSWORD': 'password',
-#         'HOST': 'database',
-#         'PORT': '3306'
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'blog',
-        'USER': 'root',
-        'PASSWORD': 'lassa',
-        'HOST': 'localhost',
+        'NAME': 'mydatabase',
+        'USER': 'user',
+        'PASSWORD': 'password',
+        'HOST': 'database',
         'PORT': '3306'
     }
 }
